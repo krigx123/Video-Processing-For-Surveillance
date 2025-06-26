@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FPV Stream</title>
+</head>
+<body>
+    <h2>FPV Camera Live Feed</h2>
+    <img src="{{ url_for('video_feed') }}" width="640" height="480">
+
+    <div style="margin-top: 20px;">
+        <button onclick="startRecording()">Start Recording</button>
+        <button onclick="stopRecording()">Stop Recording</button>
+        <button id="downloadBtn" onclick="downloadRecording()" style="display: none;">Download Last Recording</button>
+        <p id="statusText">Not recording</p>
+    </div>
+    <div style="margin-top: 20px;">
+      <progress id="progressBar" value="0" max="60" style="width: 300px;"></progress>
+      <p id="timerText">Recording: 0s</p>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
