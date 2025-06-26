@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response, request, send_file, jsonify
+from flask import Flask, render_template, Response, send_file, jsonify
 import cv2
 import threading
 import time

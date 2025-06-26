@@ -1,13 +1,34 @@
 let startTimestamp = null;
 let timerInterval = null;
+let isRecording = false;
 
-function startRecording() {
-  fetch('/start_recording', {method: 'POST'})
-      .then(res => res.json())
-      .then(data => {
-        startTimestamp = data.start_time * 1000;  // Convert to ms
-        updateProgress();  // Start stopwatch and progress
-      });
+function toggleRecording() {
+  const button = document.getElementById('recordToggleBtn');
+  button.className = isRecording ? 'recording' : 'idle';
+
+  if (!isRecording) {
+    // Start recording
+    fetch('/start_recording', {method: 'POST'})
+        .then(res => res.json())
+        .then(data => {
+          isRecording = true;
+          startTimestamp = data.start_time * 1000;
+          button.innerText = 'Stop Recording';
+          updateProgress();
+        });
+  } else {
+    // Stop recording
+    fetch('/stop_recording', {method: 'POST'})
+        .then(res => res.json())
+        .then(data => {
+          isRecording = false;
+          startTimestamp = null;
+          clearInterval(timerInterval);
+          document.getElementById('timerText').innerText = 'Recording stopped';
+          button.innerText = 'Start Recording';
+          checkDownloadAvailability();
+        });
+  }
 }
 
 
@@ -32,18 +53,6 @@ function updateProgress() {
     }
   }, 1000);
 }
-
-function stopRecording() {
-  fetch('/stop_recording', {method: 'POST'})
-      .then(res => res.json())
-      .then(data => {
-        clearInterval(timerInterval);
-        startTimestamp = null;
-        document.getElementById('timerText').innerText = 'Recording stopped';
-        checkDownloadAvailability();
-      });
-}
-
 
 function downloadRecording() {
   window.location.href = '/download';
